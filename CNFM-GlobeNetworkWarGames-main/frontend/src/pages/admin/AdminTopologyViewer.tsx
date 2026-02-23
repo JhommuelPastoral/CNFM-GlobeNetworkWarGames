@@ -581,8 +581,7 @@ export default function AdminTopologyViewer({
   const [services, setServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [reactFlowInstance, setReactFlowInstance] =
-    useState<ReactFlowInstance | null>(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
   const edgeTypes = useMemo(() => ({ labelled: DraggableLabelEdge }), []);
   const [offline, setOffline] = useState<Set<string>>(new Set());
   const [altLookup, setAltLookup] = useState<Record<string, AltMap>>({});
@@ -1121,7 +1120,7 @@ export default function AdminTopologyViewer({
         glowOffline: "rgba(248,113,113,.45)",
         label: { bg: "#facc15", border: "#b45309", color: "#1f2937" },
         labelAlt: { bg: "#34d399", border: "#166534", color: "#022c22" },
-        labelOffline: { bg: "#f87171", border: "#991b1b", color: "#fff5f5" },
+        labelOffline: { bg: "#facc15", border: "#b45309", color: "#1f2937" },
         labelStructural: {
           bg: "rgba(148,163,184,.15)",
           border: "rgba(148,163,184,.4)",
@@ -1325,7 +1324,6 @@ export default function AdminTopologyViewer({
         )}px`,
       }
     : undefined;
-
   const onToggleNode = (nodeId: string) => {
     if (nodeId === selectedSiteCode) {
       handleSetAllOffline();
@@ -1352,7 +1350,8 @@ export default function AdminTopologyViewer({
       return next;
     });
   };
-  console.log(flow)
+
+
   return (
     <div
       className={`topology-viewer-shell ${
