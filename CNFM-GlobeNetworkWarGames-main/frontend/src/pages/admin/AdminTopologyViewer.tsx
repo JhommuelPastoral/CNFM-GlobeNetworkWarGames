@@ -607,6 +607,7 @@ export default function AdminTopologyViewer({
     [siteOptions, selectedSiteCode]
   );
   const handleClosePicker = useCallback(() => setPickerOpen(false), []);
+  
   const fetchSiteSummaries = useCallback(async (): Promise<SiteSummary[]> => {
     if (!isAdminMode || isSuperAdmin) {
       return await listPublishedSiteSummaries();
@@ -834,7 +835,6 @@ export default function AdminTopologyViewer({
       cancelled = true;
     };
   }, [selectedSiteCode, siteOptions, reactFlowInstance]);
-
   // Fit view whenever a site is loaded and nodes are present
   useEffect(() => {
     if (!reactFlowInstance) return;
@@ -941,11 +941,10 @@ export default function AdminTopologyViewer({
   const structuralEdgeIds = useMemo(() => {
     const ids = new Set<string>();
     flow.edges.forEach((edge) => {
-      if ((edge.data as any)?.structural) ids.add(edge.id);
+      if ((edge.data as any)?.structural) ids.add(edge.id);``
     });
     return ids;
   }, [flow.edges]);
-
   const toggleableEdgeKeys = useMemo(() => {
     // All non-structural edges currently rendered
     return flow.edges
@@ -1327,6 +1326,33 @@ export default function AdminTopologyViewer({
       }
     : undefined;
 
+  const onToggleNode = (nodeId: string) => {
+    if (nodeId === selectedSiteCode) {
+      handleSetAllOffline();
+      return;
+    }
+
+    // Otherwise → toggle only edges connected to this node
+    setOffline((prev) => {
+      const next = new Set(prev);
+
+      flow.edges.forEach((edge) => {
+        const isStructural = (edge.data as any)?.structural;
+        if (isStructural) return;
+
+        if (edge.source === nodeId || edge.target === nodeId) {
+          if (next.has(edge.id)) {
+            next.delete(edge.id); 
+          } else {
+            next.add(edge.id);
+          }
+        }
+      });
+
+      return next;
+    });
+  };
+  console.log(flow)
   return (
     <div
       className={`topology-viewer-shell ${
@@ -1513,6 +1539,7 @@ export default function AdminTopologyViewer({
             nodesConnectable={false}
             elementsSelectable={false}
             panOnDrag
+            onNodeClick={(event, node) => onToggleNode(node.id)}
             zoomOnScroll
             preventScrolling={false}
             onInit={setReactFlowInstance}
