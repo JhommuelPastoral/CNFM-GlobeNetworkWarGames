@@ -28,8 +28,8 @@ export default function App() {
   return (
     <Routes>
       {/* PUBLIC / GUEST APP */}
-      <Route index element={<Home />} />
       <Route path="/" element={<MainLayout />}>
+      <Route index element={<Home />} />
         <Route path="luzon" element={<Placeholder title="Luzon" />} />
         <Route path="mindanao" element={<Placeholder title="Mindanao" />} />
         <Route path="all-sites" element={<Placeholder title="All Sites" />} />

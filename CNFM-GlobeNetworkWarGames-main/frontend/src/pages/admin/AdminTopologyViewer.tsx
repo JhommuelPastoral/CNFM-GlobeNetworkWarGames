@@ -1557,7 +1557,7 @@ export default function AdminTopologyViewer({
               <Panel position="bottom-right">
                 <div className="px-3 py-1.5">
                   <p className="font-mono text-xs font-light">
-                    Created at: {new Date(dateCreated).toLocaleDateString()}
+                    Date Modified: {new Date(dateCreated).toLocaleDateString()}
                   </p>
                 </div>
               </Panel>
