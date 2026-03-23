@@ -14,6 +14,7 @@ import ReactFlow, {
   Edge,
   ReactFlowInstance,
   getRectOfNodes,
+  Panel,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import Swal from "sweetalert2";
@@ -590,6 +591,7 @@ export default function AdminTopologyViewer({
   const resetBtnRef = useRef<HTMLButtonElement | null>(null);
   const normalizedInitial = initialSiteCode?.trim().toUpperCase();
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [dateCreated, setDateCreated] = useState('');
   const [activeTheme, setActiveTheme] = useState<"light" | "dark">(
     resolveInitialTheme
   );
@@ -788,7 +790,7 @@ export default function AdminTopologyViewer({
             return null;
           }),
         ]);
-
+        console.log("topo:", topo, "published:", published);
         if (cancelled) return;
 
         setSelectedSite(topo);
@@ -796,6 +798,7 @@ export default function AdminTopologyViewer({
         setOffline(new Set());
         setAltLookup({});
         setHover(null);
+        setDateCreated(published?.updatedAt || '');
 
         const connectionMap = new Map<string, Connection>(
           topo.connections.map((conn) => [conn.key, conn])
@@ -880,7 +883,6 @@ export default function AdminTopologyViewer({
     }
     setAltLookup(next);
   }, [offline, selectedSite]);
-
   // Sidebar resize drag
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -1112,7 +1114,7 @@ export default function AdminTopologyViewer({
     if (!isPublicMode) {
       return {
         edge: "#60a5fa",
-        alternative: "#34d399",
+        alternative: "#60a5fa",
         offline: "#f87171",
         structural: "rgba(148,163,184,.45)",
         glowEdge: "rgba(96,165,250,.35)",
@@ -1300,6 +1302,7 @@ export default function AdminTopologyViewer({
     if (!hover) return null;
     return getHoverDetails(hover.key, connectionsByKey, offline, altLookup);
   }, [hover, connectionsByKey, offline, altLookup]);
+  
   const headerEyebrow = isPublicMode
     ? "Globe Network WarGames"
     : "Published Topology";
@@ -1350,7 +1353,6 @@ export default function AdminTopologyViewer({
       return next;
     });
   };
-
 
   return (
     <div
@@ -1551,6 +1553,15 @@ export default function AdminTopologyViewer({
               size={1}
               color={gridColor}
             />
+            {!needsSiteSelection && (
+              <Panel position="bottom-right">
+                <div className="px-3 py-1.5">
+                  <p className="font-mono text-xs font-light">
+                    Created at: {new Date(dateCreated).toLocaleDateString()}
+                  </p>
+                </div>
+              </Panel>
+            )}
             <Controls showInteractive={false} className="viewer-controls" />
           </ReactFlow>
           {hover && hoverDetails && (

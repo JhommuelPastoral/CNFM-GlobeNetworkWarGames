@@ -4,6 +4,7 @@ import AdminTopologyViewer from "./admin/AdminTopologyViewer";
 
 export default function PublishedTopology() {
   const params = useParams<{ siteCode?: string }>();
+  console.log("params", params);
   const navigate = useNavigate();
   const initial = params.siteCode ? params.siteCode.toUpperCase() : undefined;
 
